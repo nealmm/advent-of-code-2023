@@ -1,13 +1,53 @@
-const fs = require('node:fs');
+const title = '--- Day 1: Trebuchet?! ---';
 
-// const input = fs.readFileSync('day/1/input.txt', 'utf-8');
+function part1(input) {
+    let sum = 0;
 
-function solution1(input) {
-    return 0;
+    for (line of input.split('\n')) {
+        const digits = line.match(/\d/g);
+
+        if (digits !== null) {
+            const first = digits[0];
+            const last  = digits[digits.length - 1];
+
+            sum += parseInt(`${first}${last}`);
+        }
+    }
+
+    return sum;
 }
 
-function solution2(input) {
-    return 0;
+function part2(input) {
+    let sum = 0;
+
+    const mapToDigit = {
+        'one': '1', 'two': '2', 'three': '3',
+        'four': '4', 'five': '5', 'six': '6',
+        'seven': '7', 'eight': '8', 'nine': '9'
+    };
+
+    const pattern = /(?=(\d|one|two|three|four|five|six|seven|eight|nine))/g;
+
+    for (line of input.split('\n')) {
+        const digits = Array.from(line.matchAll(pattern), x => x[1]);
+
+        if (digits.length > 0) {
+            let first = digits[0];
+            let last  = digits[digits.length - 1];
+
+            if (!first.match(/\d/)) {
+                first = mapToDigit[first];
+            }
+
+            if (!last.match(/\d/)) {
+                last = mapToDigit[last];
+            }
+
+            sum += parseInt(`${first}${last}`);
+        }
+    }
+
+    return sum;
 }
 
-module.exports = { solution1, solution2 };
+module.exports = { title, part1, part2 };

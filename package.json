@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "solve": "node solve.js"
   },
   "devDependencies": {
     "jest": "^29.7.0"
