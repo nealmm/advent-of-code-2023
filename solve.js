@@ -17,7 +17,7 @@ const { values: { day, part } } = util.parseArgs({ options });
 
 const { title, part1, part2 } = require(`./day/${day}/solutions`);
 
-const input = fs.readFileSync(`./day/${day}/input.txt`, 'utf-8');
+const input = fs.readFileSync(`./day/${day}/input.txt`, 'utf-8').trim();
 
 console.log(title);
 
