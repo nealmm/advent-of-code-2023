@@ -1,4 +1,4 @@
-const title = '--- Day 5: XXXXX ---';
+const title = '--- Day 5: If You Give A Seed A Fertilizer ---';
 
 function part1(input) {
     let min = undefined;
@@ -41,7 +41,6 @@ function part1(input) {
     return min;
 }
 
-// 79004095 (too high)
 function part2(input) {
     let min = undefined;
 
