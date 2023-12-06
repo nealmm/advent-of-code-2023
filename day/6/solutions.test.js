@@ -1,6 +1,6 @@
 const { title, part1, part2 } = require('./solutions');
 
-const example =
+const example1 =
 `Time:      7  15   30
 Distance:  9  40  200`;
 
@@ -10,7 +10,7 @@ Distance:  940200`;
 
 describe(title, () => {
     test('--- Part One ---', () => {
-        expect(part1(example)).toBe(288);
+        expect(part1(example1)).toBe(288);
     });
 
     test('--- Part Two ---', () => {

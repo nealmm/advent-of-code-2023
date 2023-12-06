@@ -1,4 +1,4 @@
-const title = '--- Day 1: Wait For It ---';
+const title = '--- Day 6: Wait For It ---';
 
 function part1(input) {
     const lines = input.split('\n');
@@ -29,21 +29,21 @@ function part1(input) {
 function part2(input) {
     const lines = input.split('\n');
 
-    const time = lines[0].match(/(\d+)/g).reduce((x, y) => `${x}${y}`);
-    const record = lines[1].match(/(\d+)/g).reduce((x, y) => `${x}${y}`);
+    const time = parseInt(lines[0].match(/(\d+)/g).reduce((x, y) => `${x}${y}`));
+    const record = parseInt(lines[1].match(/(\d+)/g).reduce((x, y) => `${x}${y}`));
 
-    let ways = 0;
+    let waysToBeat = 0;
 
     for (let hold = 0; hold <= time; hold++) {
         let speed = hold;
         let distance = speed * (time - hold);
 
         if (distance > record) {
-            ways++;
+            waysToBeat++;
         }
     }
 
-    return ways;
+    return waysToBeat;
 }
 
 module.exports = { title, part1, part2 };
