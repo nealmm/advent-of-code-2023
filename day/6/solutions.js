@@ -3,27 +3,27 @@ const title = '--- Day 1: Wait For It ---';
 function part1(input) {
     const lines = input.split('\n');
 
-    const times = lines[0].match(/(\d+)/g);
-    const records = lines[1].match(/(\d+)/g);
+    const times = lines[0].match(/(\d+)/g).map(x => parseInt(x));
+    const records = lines[1].match(/(\d+)/g).map(x => parseInt(x));
 
-    let nums = [];
+    let product = 1;
 
     for (let i = 0; i < times.length; i++) {
-        let ways = 0;
+        let waysToBeat = 0;
 
         for (let hold = 0; hold <= times[i]; hold++) {
             let speed = hold;
             let distance = speed * (times[i] - hold);
 
             if (distance > records[i]) {
-                ways++;
+                waysToBeat++;
             }
         }
 
-        nums.push(ways);
+        product *= waysToBeat;
     }
 
-    return nums.reduce((x, y) => x * y);
+    return product;
 }
 
 function part2(input) {
