@@ -1,15 +1,18 @@
-const title = '--- Day 7: XXXXX ---';
+const title = '--- Day 7: Camel Cards ---';
 
 function part1(input) {
-    let sum = 0;
+    const strength = { '2': 0, '3': 1, '4': 2, '5': 3,
+                       '6': 4, '7': 5, '8': 6, '9': 7,
+                       'T': 8, 'J': 9, 'Q': 10, 'K': 11,
+                       'A': 12 };
 
-    let data = input.split('\n').map(x => x.split(' '));
-
-    const hands = [];
-
-    const strength = card => {
-        return ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'].indexOf(card);
-    };
+    const FIVE_OF_A_KIND  = 6;
+    const FOUR_OF_A_KIND  = 5;
+    const FULL_HOUSE      = 4;
+    const THREE_OF_A_KIND = 3;
+    const TWO_PAIR        = 2;
+    const ONE_PAIR        = 1;
+    const HIGH_CARD       = 0;
 
     const typeOfHand = cards => {
         const counts = {};
@@ -24,56 +27,61 @@ function part1(input) {
         }
 
         switch (Object.keys(counts).length) {
-            case 5:
-                return 1;
-
-            case 4:
-                return 2;
-
             case 1:
-                return 7;
+                return FIVE_OF_A_KIND;
 
             case 2:
-                for (card of cards) {
-                    if (counts[card] == 4) {
-                        return 6;
+                for (id in counts) {
+                    if (counts[id] == 1 || counts[id] == 4) {
+                        return FOUR_OF_A_KIND;
+                    }
+                    else {
+                        return FULL_HOUSE;
                     }
                 }
-
-                return 5;
-
+                
             case 3:
-                for (card of cards) {
-                    if (counts[card] == 3) {
-                        return 4;
+                for (id in counts) {
+                    if (counts[id] == 3) {
+                        return THREE_OF_A_KIND;
+                    }
+
+                    if (counts[id] == 2) {
+                        return TWO_PAIR;
                     }
                 }
 
-                return 3;
+            case 4:
+                return ONE_PAIR;
+
+            case 5:
+                return HIGH_CARD;
         }
     };
 
     const byType = (a, b) => {
-        if (a.type !== b.type) {
-            if (a.type > b.type) {
-                return 1;
-            }
-            else {
+        if (a.type < b.type) {
+            return -1;
+        }
+
+        if (a.type > b.type) {
+            return 1;
+        }
+
+        for (let i = 0; i < 5; i++) {
+            if (strength[a.cards[i]] < strength[b.cards[i]]) {
                 return -1;
             }
-        }
-        else {
-            for (let i = 0; i < 5; i++) {
-                if (strength(a.cards[i]) < strength(b.cards[i])) {
-                    return 1;
-                }
 
-                if (strength(a.cards[i]) > strength(b.cards[i])) {
-                    return -1;
-                }
+            if (strength[a.cards[i]] > strength[b.cards[i]]) {
+                return 1;
             }
         }
     };
+
+    const data = input.split('\n').map(x => x.split(' '));
+
+    const hands = [];
 
     for (let i = 0; i < data.length; i++) {
         const cards = data[i][0].match(/(A|K|Q|J|T|\d)/g);
@@ -85,8 +93,11 @@ function part1(input) {
 
     hands.sort(byType);
 
+    let sum = 0;
+
     for (let i = 0; i < hands.length; i++) {
-        sum += (i + 1) * hands[i].bid;
+        const rank = i + 1;
+        sum += rank * hands[i].bid;
     }
 
     return sum;
