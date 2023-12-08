@@ -1,10 +1,8 @@
 const { lcm } = require('mathjs');
 
-const title = '--- Day 8: XXXXX ---';
+const title = '--- Day 8: Haunted Wasteland ---';
 
 function part1(input) {
-    let sum = 0;
-
     const data = input.split('\n\n').map(x => x.split('\n'));
 
     const instructions = data[0][0].split('');
@@ -23,21 +21,26 @@ function part1(input) {
         nodes[id] = node;
     }
 
-    let id = 'AAA';
+    let current = 'AAA';
+    let steps = 0;
     let i = 0;
-    while (id !== 'ZZZ') {
-        if (instructions[i] === 'L') {
-            id = nodes[id].left;
-        }
-        else if(instructions[i] === 'R') {
-            id = nodes[id].right;
+
+    while (current !== 'ZZZ') {
+        switch (instructions[i]) {
+            case 'L':
+                current = nodes[current].left;
+                break;
+
+            case 'R':
+                current = nodes[current].right;
+                break;
         }
 
-        sum++;
+        steps++;
         i = (i + 1) % instructions.length;
     }
 
-    return sum;
+    return steps;
 }
 
 function part2(input) {
