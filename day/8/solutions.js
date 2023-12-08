@@ -44,15 +44,12 @@ function part1(input) {
 }
 
 function part2(input) {
-    let sum = 0;
-
     const data = input.split('\n\n').map(x => x.split('\n'));
 
     const instructions = data[0][0].split('');
 
     const nodes = {};
-
-    let roots = [];
+    const starting = [];
 
     for (let i = 0; i < data[1].length; i++) {
         const matches = data[1][i].match(/(\w\w\w)/g);
@@ -64,56 +61,38 @@ function part2(input) {
         const node = { left, right };
 
         if (id.match(/\w\wA/) != null) {
-            roots.push(id);
+            starting.push(id);
         }
 
         nodes[id] = node;
     }
 
-    const lengths = [];
+    const pathLengths = [];
 
-    for (let j = 0; j < roots.length; j++) {
-        let current = roots[j];
-        let i = 0;
+    for (let j = 0; j < starting.length; j++) {
+        let current = starting[j];
         let steps = 0;
+        let i = 0;
 
         while (current.match(/\w\wZ/) === null) {
-            if (instructions[i] === 'L') {
-                current = nodes[current].left;
-            }
-            else if(instructions[i] === 'R') {
-                current = nodes[current].right;
-            }
+            switch (instructions[i]) {
+                case 'L':
+                    current = nodes[current].left;
+                    break;
 
-            i = (i + 1) % instructions.length;
+                case 'R':
+                    current = nodes[current].right;
+                    break;
+            }
 
             steps++;
+            i = (i + 1) % instructions.length;
         }
 
-        lengths.push(steps);
+        pathLengths.push(steps);
     }
 
-    return lcm(...lengths);
-
-    // let i = 0;
-
-    // while (roots.map(x => x.match(/\w\wZ/) === null).reduce((a, b) => a || b)) {
-    //     for (let j = 0; j < roots.length; j++) {
-    //         let id = roots[j];
-
-    //         if (instructions[i] === 'L') {
-    //             roots[j] = nodes[id].left;
-    //         }
-    //         else if(instructions[i] === 'R') {
-    //             roots[j] = nodes[id].right;
-    //         }
-    //     }
-
-    //     sum++;
-    //     i = (i + 1) % instructions.length;
-    // }
-
-    return sum;
+    return lcm(...pathLengths);
 }
 
 module.exports = { title, part1, part2 };
