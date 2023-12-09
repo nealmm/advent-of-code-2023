@@ -5,31 +5,29 @@ function part1(input) {
 
     const allZeros = nums => nums.map(n => n == 0).reduce((a, b) => a && b);
 
-    const data = input.split('\n').map(x => x.split(' ').map(y => parseInt(y)));
+    for (line of input.split('\n')) {
+        const sequences = [line.split(' ').map(x => parseInt(x))];
 
-    for (let i = 0; i < data.length; i++) {
-        const sequences = [data[i]];
+        let i = 0;
 
-        let j = 0;
-
-        while (!allZeros(sequences[j])) {
+        while (!allZeros(sequences[i])) {
             const next = [];
 
-            for (let k = 0; k < sequences[j].length - 1; k++) {
-                next.push(sequences[j][k + 1] - sequences[j][k]);
+            for (let j = 0; j < sequences[i].length - 1; j++) {
+                next.push(sequences[i][j + 1] - sequences[i][j]);
             }
 
             sequences.push(next);
-            j++;
+            i++;
         }
 
         for (let k = sequences.length - 2; k >= 0; k--) {
-            const seq = sequences[k];
+            const current = sequences[k];
             const below = sequences[k + 1];
 
-            const extra = seq[seq.length - 1] + below[below.length - 1];
+            const extra = current[current.length - 1] + below[below.length - 1];
 
-            seq.push(extra);
+            current.push(extra);
 
             if (k == 0) {
                 sum += extra;
