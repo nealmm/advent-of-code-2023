@@ -1,4 +1,4 @@
-const title = '--- Day 1: XXXXX ---';
+const title = '--- Day 10: Pipe Maze ---';
 
 function part1(input) {
     let sum = 0;
