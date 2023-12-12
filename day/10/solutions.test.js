@@ -7,7 +7,41 @@ const example1 =
 .L-J.
 .....`;
 
-const example2 =
+const example2a =
+`...........
+.S-------7.
+.|F-----7|.
+.||.....||.
+.||.....||.
+.|L-7.F-J|.
+.|..|.|..|.
+.L--J.L--J.
+...........`;
+
+const example2b =
+`..........
+.S------7.
+.|F----7|.
+.||OOOO||.
+.||OOOO||.
+.|L-7F-J|.
+.|II||II|.
+.L--JL--J.
+..........`;
+
+const example2c =
+`.F----7F7F7F7F-7....
+.|F--7||||||||FJ....
+.||.FJ||||||||L7....
+FJL7L7LJLJ||LJ.L-7..
+L--J.L7...LJS7F-7L7.
+....F-J..F7FJ|L7L7L7
+....L7.F7||L7|.L7L7|
+.....|FJLJ|FJ|F7|.LJ
+....FJL-7.||.||||...
+....L---J.LJ.LJLJ...`;
+
+const example2d =
 `FF7FSF7F7F7F7F7F---7
 L|LJ||||||||||||F--J
 FL-7LJLJ||||||LJL-77
@@ -25,6 +59,6 @@ describe(title, () => {
     });
 
     test('--- Part Two ---', () => {
-        expect(part2(example2)).toBe(10);
+        expect([example2a, example2b, example2c, example2d].map(ex => part2(ex))).toStrictEqual([4, 4, 8, 10]);
     });
 });
