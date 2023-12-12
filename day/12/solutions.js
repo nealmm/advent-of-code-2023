@@ -55,6 +55,10 @@ function part1(input) {
 
             const matches = string.match(/#+/g);
 
+            if (matches == null) {
+                continue;
+            }
+
             let valid = true;
 
             if (matches.length === groups.length) {
