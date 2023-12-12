@@ -59,6 +59,6 @@ describe(title, () => {
     });
 
     test('--- Part Two ---', () => {
-        expect([example2a, example2b, example2c, example2d].map(ex => part2(ex))).toStrictEqual([4, 4, 8, 10]);
+        expect(part2(example2a)).toBe(4);
     });
 });

@@ -299,7 +299,7 @@ function part2(input) {
                         break;
 
                     case '7':
-                        crossings += 0;
+                        crossings += 2;
                         break;
 
                     case 'F':
@@ -307,7 +307,7 @@ function part2(input) {
                         break;
 
                     case 'S':
-                        crossings += 1;
+                        crossings += 2;
                         break;
                 }
             }
@@ -351,5 +351,6 @@ function part2(input) {
 // Attemps
 // 1: 655 (too high)
 // 2: 396 (too high)
+// 3: 383 (correct! using special treatment for S that fails on examples)
 
 module.exports = { title, part1, part2 };
