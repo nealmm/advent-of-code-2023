@@ -36,7 +36,42 @@ function part1(input) {
             }
         });
 
+        const cartesian = (...a) => {
+            if (a.length == 1) {
+                return a[0].map(x => [x]);
+            }
 
+            return a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
+        };
+
+        let arrangements = 0;
+
+        for (tuple of cartesian(...substitutions)) {
+            let string = springs;
+
+            for (sub of tuple) {
+                string = string.replace(/\?+/, sub);
+            }
+
+            const matches = string.match(/#+/g);
+
+            let valid = true;
+
+            if (matches.length === groups.length) {
+                for (let i = 0; i < matches.length; i++) {
+                    valid &&= matches[i].length == groups[i];
+                }
+            }
+            else {
+                valid = false;
+            }
+
+            if (valid) {
+                arrangements++;
+            }
+        }
+
+        sum += arrangements;
     }
 
     return sum;
