@@ -9,68 +9,58 @@ function part1(input) {
         const springs = row[0];
         const groups = row[1].split(',').map(n => parseInt(n));
 
-        const substitutions = [];
+        const isValidArrangement = str => {
+            let valid = true;
 
-        const unknowns = Array.from(springs.matchAll(/(\?+)/g), (match, index) => {
-            const length = match[1].length;
+            const matches = str.match(/#+/g);
 
-            substitutions.push([]);
-
-            for (let n = 0; n < 2 ** length; n++) {
-                let sub = '';
-
-                for (let i = length - 1; i >= 0; i--) {
-                    switch ((n >> i) & 0b1) {
-                        case 0:
-                            sub += '.';
-                            break;
-
-                        case 1:
-                            sub += '#';
-                            break;
-                    }
-                }
-
-                // console.log(springs.replace(/\?+/, sub));
-                substitutions[index].push(sub)
-            }
-        });
-
-        const cartesian = (...a) => {
-            if (a.length == 1) {
-                return a[0].map(x => [x]);
+            if (matches == null || matches.length != groups.length) {
+                return false;
             }
 
-            return a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
+            for (let i = 0; i < matches.length; i++) {
+                valid &&= matches[i].length == groups[i];
+            }
+
+            return valid;
         };
+
+        const unknowns = springs.match(/\?+/g);
+        const unknownLengths = unknowns.map(x => x.length);
+        const unknownTotalLength = unknownLengths.reduce((a, b) => a + b);
 
         let arrangements = 0;
 
-        for (tuple of cartesian(...substitutions)) {
-            let string = springs;
+        for (let n = 0; n < 2 ** unknownTotalLength; n++) {
+            let sub = '';
 
-            for (sub of tuple) {
-                string = string.replace(/\?+/, sub);
-            }
+            for (let i = unknownTotalLength - 1; i >= 0; i--) {
+                switch ((n >> i) & 0b1) {
+                    case 0:
+                        sub += '.';
+                        break;
 
-            const matches = string.match(/#+/g);
-
-            if (matches == null) {
-                continue;
-            }
-
-            let valid = true;
-
-            if (matches.length === groups.length) {
-                for (let i = 0; i < matches.length; i++) {
-                    valid &&= matches[i].length == groups[i];
+                    case 1:
+                        sub += '#';
+                        break;
                 }
             }
-            else {
-                valid = false;
+
+            const substrs = [];
+            let j = 0;
+
+            for (len of unknownLengths) {
+                substrs.push(sub.substring(j, j + len));
+                j += len;
             }
 
-            if (valid) {
+            let string = springs;
+
+            for (substr of substrs) {
+                string = string.replace(/\?+/, substr);
+            }
+
+            if (isValidArrangement(string)) {
                 arrangements++;
             }
         }
