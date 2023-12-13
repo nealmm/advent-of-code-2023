@@ -64,7 +64,9 @@ function part1(input) {
 function part2(input) {
     let sum = 0;
 
+    let patternCount = 0;
     for (pattern of input.split('\n\n')) {
+        patternCount++;
         const tiles = pattern.split('\n').map(line => line.split(''));
 
         const flipTile = (row, col) => {
@@ -111,12 +113,14 @@ function part2(input) {
         for (let i = 0; i < tiles.length - 1; i++) {
             if (rowsReflectAt(i)) {
                 horizLineOfRefl = i;
+                break;
             }
         }
 
         for (let i = 0; i < tiles[0].length - 1; i++) {
             if (colsReflectAt(i)) {
                 vertLineOfRefl = i;
+                break;
             }
         }
 
@@ -164,6 +168,8 @@ function part2(input) {
             }
         }
 
+        let foundSmudge = false;
+
         for (point of possibleSmudges) {
             // console.log(`Testing tile (${point.row}, ${point.col})...`);
 
@@ -174,6 +180,10 @@ function part2(input) {
             for (let i = 0; i < tiles.length - 1; i++) {
                 if (rowsReflectAt(i)) {
                     newHorizLineOfRefl = i;
+
+                    if (i != horizLineOfRefl) {
+                        break;
+                    }
                 }
             }
 
@@ -182,6 +192,10 @@ function part2(input) {
             for (let i = 0; i < tiles[0].length - 1; i++) {
                 if (colsReflectAt(i)) {
                     newVertLineOfRefl = i;
+
+                    if (i != vertLineOfRefl) {
+                        break;
+                    }
                 }
             }
 
@@ -191,6 +205,7 @@ function part2(input) {
             // console.log(`\tNew vert. line of refl. = ${newVertLineOfRefl}`);
 
             if (newHorizLineOfRefl != horizLineOfRefl || newVertLineOfRefl != vertLineOfRefl) {
+                foundSmudge = true;
                 // console.log(`Smudge found at tile (${point.row}, ${point.col})`)
 
                 if (newHorizLineOfRefl != horizLineOfRefl) {
@@ -212,6 +227,15 @@ function part2(input) {
             else {
                 flipTile(point.row, point.col);
             }
+        }
+
+        // if (!foundSmudge) {
+        //     console.log(patternCount);
+        // }
+        if (patternCount == 14) {
+            console.log(horizLineOfRefl);
+            console.log(vertLineOfRefl);
+            console.log(possibleSmudges);
         }
 
         if (vertLineOfRefl != undefined) {
