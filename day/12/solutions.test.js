@@ -14,6 +14,6 @@ describe(title, () => {
     });
 
     test('--- Part Two ---', () => {
-        expect(part2(example)).toBe(-1);
+        expect(part2(example)).toBe(525152);
     });
 });

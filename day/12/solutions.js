@@ -77,7 +77,64 @@ function part1(input) {
 function part2(input) {
     let sum = 0;
 
-    // ...
+    const memos = new Map();
+
+    const count = (springs, groups) => {
+        if (springs.length == 0) {
+            if (groups.length == 0) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+
+        if (groups.length == 0) {
+            if (springs.includes('#')) {
+                return 0;
+            }
+            else {
+                return 1;
+            }
+        }
+
+        const key = springs + ' ' + groups.join(',');
+
+        if (memos.has(key)) {
+            return memos.get(key);
+        }
+
+        let result = 0;
+
+        if (springs[0] === '.' || springs[0] === '?') {
+            result += count(springs.substring(1), groups);
+        }
+
+        if (springs[0] === '#' || springs[0] === '?') {
+            if (groups[0] <= springs.length && !springs.substring(0, groups[0]).includes('.') && (groups[0] == springs.length || springs[groups[0]] !== '#')) {
+                result += count(springs.substring(groups[0] + 1), groups.slice(1));
+            } 
+        }
+
+        memos.set(key, result);
+
+        return result;
+    };
+
+    const data = input.split('\n').map(line => line.split(' '));
+
+    for (row of data) {
+        let [springs, groups] = [row[0], row[1]];
+
+        for (let i = 0; i < 4; i++) {
+            springs += '?' + row[0];
+            groups += ',' + row[1];
+        }
+
+        groups = groups.split(',').map(n => parseInt(n));
+
+        sum += count(springs, groups);
+    }
 
     return sum;
 }
