@@ -6,12 +6,9 @@ function part1(input) {
     const data = input.split('\n').map(line => line.split(' '));
 
     for (row of data) {
-        const springs = row[0];
-        const groups = row[1].split(',').map(n => parseInt(n));
+        const [springs, groups] = [row[0], row[1].split(',').map(n => parseInt(n))];
 
         const isValidArrangement = str => {
-            let valid = true;
-
             const matches = str.match(/#+/g);
 
             if (matches == null || matches.length != groups.length) {
@@ -19,22 +16,33 @@ function part1(input) {
             }
 
             for (let i = 0; i < matches.length; i++) {
-                valid &&= matches[i].length == groups[i];
+                if (matches[i].length != groups[i]) {
+                    return false;
+                }
             }
 
-            return valid;
+            return true;
         };
 
-        const unknowns = springs.match(/\?+/g);
-        const unknownLengths = unknowns.map(x => x.length);
-        const unknownTotalLength = unknownLengths.reduce((a, b) => a + b);
+        let unknownsTotalLength = 0;
 
-        let arrangements = 0;
+        const unknowns = Array.from(springs.matchAll(/\?+/g), match => {
+            const record = {
+                index: unknownsTotalLength,
+                length: match[0].length
+            };
 
-        for (let n = 0; n < 2 ** unknownTotalLength; n++) {
+            unknownsTotalLength += record.length;
+
+            return record;
+        });
+
+        let validArrangements = 0;
+
+        for (let n = 0; n < 2 ** unknownsTotalLength; n++) {
             let sub = '';
 
-            for (let i = unknownTotalLength - 1; i >= 0; i--) {
+            for (let i = unknownsTotalLength - 1; i >= 0; i--) {
                 switch ((n >> i) & 0b1) {
                     case 0:
                         sub += '.';
@@ -46,26 +54,21 @@ function part1(input) {
                 }
             }
 
-            const substrs = [];
-            let j = 0;
+            let str = springs;
 
-            for (len of unknownLengths) {
-                substrs.push(sub.substring(j, j + len));
-                j += len;
+            for (record of unknowns) {
+                const start = record.index;
+                const end = record.index + record.length;
+
+                str = str.replace(/\?+/, sub.substring(start, end));
             }
 
-            let string = springs;
-
-            for (substr of substrs) {
-                string = string.replace(/\?+/, substr);
-            }
-
-            if (isValidArrangement(string)) {
-                arrangements++;
+            if (isValidArrangement(str)) {
+                validArrangements++;
             }
         }
 
-        sum += arrangements;
+        sum += validArrangements;
     }
 
     return sum;
