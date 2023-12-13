@@ -154,11 +154,18 @@ function part2(input) {
     const pipesConnectingTo = ({ row, col }) => {
         const connecting = [];
 
+        let connectsUp = false;
+        let connectsDown = false;
+        let connectsLeft = false;
+        let connectsRight = false;
+
         if (row > 0) {
             const up = grid[row - 1][col];
 
             if (up === '|' || up === '7' || up === 'F') {
                 connecting.push(nodes[(row - 1) * grid[row].length + col]);
+                // | L J
+                connectsUp = true;
             }
         }
 
@@ -167,6 +174,8 @@ function part2(input) {
 
             if (right === '-' || right === '7' || right === 'J') {
                 connecting.push(nodes[row * grid[row].length + (col + 1)]);
+                // - L F
+                connectsRight = true;
             }
         }
 
@@ -175,6 +184,8 @@ function part2(input) {
 
             if (down === '|' || down === 'L' || down === 'J') {
                 connecting.push(nodes[(row + 1) * grid[row].length + col]);
+                // | 7 F
+                connectsDown = true;
             }
         }
 
@@ -183,10 +194,39 @@ function part2(input) {
 
             if (left === '-' || left === 'L' || left === 'F') {
                 connecting.push(nodes[row * grid[row].length + (col - 1)]);
+                // - J 7
+                connectsLeft = true;
             }
         }
 
-        return connecting;
+        let pipe;
+
+        if (connectsUp && connectsDown) {
+            pipe = '|';
+        }
+
+        if (connectsUp && connectsRight) {
+            pipe = 'L';
+        }
+
+
+        if (connectsUp && connectsLeft) {
+            pipe = 'J';
+        }
+
+        if (connectsDown && connectsRight) {
+            pipe = 'F';
+        }
+
+        if (connectsDown && connectsLeft) {
+            pipe = '7';
+        }
+
+        if (connectsLeft && connectsRight) {
+            pipe = '-';
+        }
+
+        return { connecting, pipe };
     };
 
     for (let i = 0; i < grid.length; i++) {
@@ -239,8 +279,12 @@ function part2(input) {
                 case 'S':
                     start = node;
 
-                    for (pipe of pipesConnectingTo(start)) {
-                        edges.push({ node1: start, node2: pipe });
+                    const { connecting, pipe } = pipesConnectingTo(start);
+
+                    grid[i][j] = pipe;
+
+                    for (p of connecting) {
+                        edges.push({ node1: start, node2: p });
                     }
 
                     break;
@@ -305,10 +349,6 @@ function part2(input) {
                     case 'F':
                         crossings += 1;
                         break;
-
-                    case 'S':
-                        crossings += 2;
-                        break;
                 }
             }
 
@@ -322,35 +362,15 @@ function part2(input) {
         return true;
     };
 
-    const enclosureGrid = [];
-
     for (let i = 0; i < grid.length; i++) {
         for (let j = 0; j < grid[i].length; j++) {
             if (enclosedByCycle(i, j)) {
-                enclosureGrid.push('I');
                 sum++;
-            }
-            else if (nodesInCycle.includes(nodes[i * grid[i].length + j])) {
-                enclosureGrid.push(grid[i][j]);
-            }
-            else {
-                enclosureGrid.push('O');
-            }
-
-            if (j == grid[i].length - 1) {
-                enclosureGrid.push('\n');
             }
         }
     }
 
-    // console.log(enclosureGrid.join(''));
-
     return sum;
 }
-
-// Attemps
-// 1: 655 (too high)
-// 2: 396 (too high)
-// 3: 383 (correct! using special treatment for S that fails on examples)
 
 module.exports = { title, part1, part2 };
