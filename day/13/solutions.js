@@ -61,42 +61,30 @@ function part1(input) {
     return sum;
 }
 
-// 34155 (too low)
-// 44631 (too high)
 function part2(input) {
     let sum = 0;
 
     for (pattern of input.split('\n\n')) {
         const tiles = pattern.split('\n').map(line => line.split(''));
 
-        const diffBetweenRowsMirroredAt = (index) => {
+        const differenceBetweenRows = (i, j) => {
             let difference = 0;
 
-            for (let i = 0; (0 <= index - i) && (index + i + 1 < tiles.length); i++) {
-                const rowAbove = tiles[index - i];
-                const rowBelow = tiles[index + i + 1];
-
-                for (let j = 0; j < tiles[0].length; j++) {
-                    if (rowAbove[j] !== rowBelow[j]) {
-                        difference++;
-                    }
+            for (let k = 0; k < tiles[0].length; k++) {
+                if (tiles[i][k] !== tiles[j][k]) {
+                    difference++;
                 }
             }
 
             return difference;
         };
 
-        const diffBetweenColsMirroredAt = (index) => {
+        const differenceBetweenCols = (i, j) => {
             let difference = 0;
 
-            for (let i = 0; (0 <= index - i) && (index + i + 1 < tiles[0].length); i++) {
-                const colLeft = tiles.map(row => row[index - i]);
-                const colRight = tiles.map(row => row[index + i + 1]);
-
-                for (let j = 0; j < tiles.length; j++) {
-                    if (colLeft[j] !== colRight[j]) {
-                        difference++;
-                    }
+            for (let k = 0; k < tiles.length; k++) {
+                if (tiles[k][i] !== tiles[k][j]) {
+                    difference++;
                 }
             }
 
@@ -107,16 +95,26 @@ function part2(input) {
         let vertLineOfRefl = undefined;
 
         for (let i = 0; i < tiles.length - 1; i++) {
-            if (diffBetweenRowsMirroredAt(i) == 1) {
+            let totalDifference = 0;
+
+            for (let j = 0; (0 <= i - j) && (i + j + 1 < tiles.length); j++) {
+                totalDifference += differenceBetweenRows(i - j, i + j + 1);
+            }
+
+            if (totalDifference == 1) {
                 horizLineOfRefl = i;
-                break;
             }
         }
 
         for (let i = 0; i < tiles[0].length - 1; i++) {
-            if (diffBetweenColsMirroredAt(i) == 1) {
+            let totalDifference = 0;
+
+            for (let j = 0; (0 <= i - j) && (i + j + 1 < tiles[0].length); j++) {
+                totalDifference += differenceBetweenCols(i - j, i + j + 1);
+            }
+
+            if (totalDifference == 1) {
                 vertLineOfRefl = i;
-                break;
             }
         }
 
