@@ -32,27 +32,29 @@ function part1(input) {
             return true;
         };
 
-        const horizLinesOfRefl = [];
-        const vertLinesOfRefl = [];
+        let horizLineOfRefl = undefined;
+        let vertLineOfRefl = undefined;
 
         for (let i = 0; i < tiles.length - 1; i++) {
             if (rowsReflectAt(i)) {
-                horizLinesOfRefl.push(i);
+                horizLineOfRefl = i;
+                break;
             }
         }
 
         for (let i = 0; i < tiles[0].length - 1; i++) {
             if (colsReflectAt(i)) {
-                vertLinesOfRefl.push(i);
+                vertLineOfRefl = i;
+                break;
             }
         }
 
-        for (vlr of vertLinesOfRefl) {
-            sum += vlr + 1;
+        if (vertLineOfRefl != undefined) {
+            sum += vertLineOfRefl + 1;
         }
 
-        for (hlr of horizLinesOfRefl) {
-            sum += 100 * (hlr + 1);
+        if (horizLineOfRefl != undefined) {
+            sum += 100 * (horizLineOfRefl + 1);
         }
     }
 
