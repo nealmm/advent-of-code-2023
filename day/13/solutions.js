@@ -69,7 +69,7 @@ function part2(input) {
     for (pattern of input.split('\n\n')) {
         const tiles = pattern.split('\n').map(line => line.split(''));
 
-        const rowsReflectAt = (index) => {
+        const diffBetweenRowsMirroredAt = (index) => {
             let difference = 0;
 
             for (let i = 0; (0 <= index - i) && (index + i + 1 < tiles.length); i++) {
@@ -86,7 +86,7 @@ function part2(input) {
             return difference;
         };
 
-        const colsReflectAt = (index) => {
+        const diffBetweenColsMirroredAt = (index) => {
             let difference = 0;
 
             for (let i = 0; (0 <= index - i) && (index + i + 1 < tiles[0].length); i++) {
@@ -107,14 +107,14 @@ function part2(input) {
         let vertLineOfRefl = undefined;
 
         for (let i = 0; i < tiles.length - 1; i++) {
-            if (rowsReflectAt(i) == 1) {
+            if (diffBetweenRowsMirroredAt(i) == 1) {
                 horizLineOfRefl = i;
                 break;
             }
         }
 
         for (let i = 0; i < tiles[0].length - 1; i++) {
-            if (colsReflectAt(i) == 1) {
+            if (diffBetweenColsMirroredAt(i) == 1) {
                 vertLineOfRefl = i;
                 break;
             }
