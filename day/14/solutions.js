@@ -181,8 +181,13 @@ function part2(input) {
 
     const configMap = new Map();
     let cycleLength = undefined;
+    let target = undefined;
 
     for (let i = 0; i < 1000000000; i++) {
+        if (target != undefined && i % cycleLength == target) {
+            break;
+        }
+
         tiltNorth();
         tiltWest();
         tiltSouth();
@@ -191,37 +196,11 @@ function part2(input) {
         const config = tiles.map(row => row.join('')).join('\n');
 
         if (configMap.has(config)) {
-            console.log(`Found cycle between ${configMap.get(config)} and ${i}`)
             cycleLength = i - configMap.get(config);
-            break;
+            target = 1000000000 % cycleLength;
         }
         else {
             configMap.set(config, i)
-        }
-    }
-
-    if (cycleLength != undefined) {
-        tiles = originalConfig.split('\n').map(line => line.split(''));
-
-        // 118: Dirty magic number trick
-        // Used 1000000000 % cycleLength on example
-        // but for input data this doesn't work!
-        //
-        // Probably becuase that gives 34 but looping doesn't
-        // kick in until iteration 114. Cycle length for input
-        // is 42.
-        //
-        // 118 works because
-
-        //      1000000000 % 42 == 118 % 42 == 34
-        //
-        // Just need to find the proper way to calculate
-        
-        for (let i = 0; i < 118; i++) {
-            tiltNorth();
-            tiltWest();
-            tiltSouth();
-            tiltEast();
         }
     }
 
